@@ -1,10 +1,9 @@
 {
-    "name": "evsecrets",
-    "version": "0.4.0",
+    "name": "evsecrets-console-app",
+    "version": "0.1.0",
     "description": "Detect environment variable secrets in your codebase before you push your code to GitHub.",
     "homepage": "https://github.com/cjoakim/evsecrets",
     "main": "./dist/index.js",
-    "bin": "./dist/index.js",
     "types": "dist/index.d.ts",
     "engines": {
         "node": ">=22.0.0"
@@ -19,10 +18,7 @@
         "build": "tsc",
         "prebuild": "rimraf dist",
         "test": "mocha dist/*.test.js",
-        "scan": "node ./dist/index.js scan",
-        "patterns": "node ./dist/index.js patterns",
-        "files": "node ./dist/index.js files",
-        "version": "node ./dist/index.js version"
+        "secrets": "./node_modules/evsecrets/dist/index.js"
     },
     "keywords": [
         "Detect",
@@ -36,7 +32,8 @@
     "dependencies": {
         "dotenv": "^16.5.0",
         "ts-node": "^10.9.2",
-        "winston": "^3.17.0"
+        "winston": "^3.17.0",
+        "evsecrets": "file:../evsecrets-0.4.0.tgz"
     },
     "devDependencies": {
         "@types/chai": "^5.2.1",

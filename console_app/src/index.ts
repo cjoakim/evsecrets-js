@@ -5,15 +5,14 @@
  * Chris Joakim,  2025
  */
 
-import { EnvScanner } from "./EnvScanner";
-import { FileUtil } from "./FileUtil";
+import { EnvScanner } from "evsecrets";
+
 
 function displayCommandLineExamples() {
     console.log('-');
     console.log('npm exec evsecrets patterns');
     console.log('npm exec evsecrets files');
     console.log('npm exec evsecrets scan');
-    console.log('npm exec evsecrets version');
     console.log('');
 }
 
@@ -32,9 +31,6 @@ async function main() {
         case "scan":
             let results = await es.scan(null);
             break;
-        case "version":
-            console.log(EnvScanner.version());
-            break;
         default:
             displayCommandLineExamples();
             break;
@@ -46,6 +42,3 @@ async function main() {
 }
 
 main();
-
-export { EnvScanner }
-export { FileUtil }

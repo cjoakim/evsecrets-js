@@ -7,10 +7,41 @@ in your codebase **before** you push your code to GitHub.
 
 ## Installation
 
-Install the library in your Node.js project.
+### Global Installation
+
+You can install the library globally, with the -g parameter.
 
 ```
-$ npm install evsecrets
+$ npm install -g evsecrets
+```
+
+### Project Installation 
+
+Alternatively, you can install the library locally in your Node.js project.
+
+```
+$ npm install -g evsecrets
+```
+
+Add script alias command in package.json:
+
+```
+    "scripts": {
+        ...
+        "secrets": "./node_modules/evsecrets/dist/index.js"
+    },
+```
+
+Then, execute the alias command:
+
+```
+$ npm run secrets scan
+```
+
+Linux/macOS users may need to make the script executable:
+
+```
+$ chmod 744 ./node_modules/evsecrets/dist/index.js
 ```
 
 ## Configuration
@@ -67,17 +98,19 @@ will be identified if it exists in your codebase.
 ## Use 
 
 ```
-$ npx evsecrets patterns
-
-$ npx evsecrets files
-
-$ npx evsecrets scan
+$ npx -- evsecrets@0.4.0 version
+$ npx -- evsecrets@0.4.0 patterns
+$ npx -- evsecrets@0.4.0 files
+$ npx -- evsecrets@0.4.0 scan
 ```
 
 ## Version History
 
 | Version |    Date    | Changes                                                         |
 | ------- | ---------- | --------------------------------------------------------------- |
+|  0.4.0  | 2025/04/13 | npx usage and -g installation                                   |
+|  0.3.0  | 2025/04/13 | Simplified bin command, added version CLI function              |
+|  0.2.0  | 2025/04/13 | Sample console_app                                              |
 |  0.1.0  | 2025/04/13 | Initial release                                                 |
 
 
@@ -87,7 +120,22 @@ $ npx evsecrets scan
 
 Instructions for developing, testing, packaging, and publishing this library.
 
+### Links
 
+- https://docs.npmjs.com/cli/v11/commands/npx  (version 11.3.0 - latest)
+
+### Upgrade npm and typescript
+
+```
+$ npm install -g npm@11.3.0
+$ npm install -g typescript@5.8.3
+
+$ npm --version
+11.3.0
+
+$ tsc --version
+Version 5.8.3
+```
 
 ### Clone the codebase
 
@@ -218,5 +266,5 @@ demonstration purposes.  See ttps://learn.microsoft.com/en-us/azure/cosmos-db/ho
 
 ```
 $ npm login
-$ npm publish --access=public
+$ npm publish
 ```
