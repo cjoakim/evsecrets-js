@@ -116,6 +116,13 @@ will be identified if it exists in your codebase.
 The **npx** program within Node.js can be used to execute this library as follows:
 
 ```
+$ npx -- evsecrets version
+$ npx -- evsecrets secrets
+$ npx -- evsecrets files
+$ npx -- evsecrets scan
+
+- or - 
+
 $ npx -- evsecrets@0.5.0 version
 $ npx -- evsecrets@0.5.0 secrets
 $ npx -- evsecrets@0.5.0 files
