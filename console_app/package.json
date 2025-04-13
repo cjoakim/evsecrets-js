@@ -18,7 +18,7 @@
         "build": "tsc",
         "prebuild": "rimraf dist",
         "test": "mocha dist/*.test.js",
-        "secrets": "./node_modules/evsecrets/dist/index.js"
+        "evsecrets": "./node_modules/evsecrets/dist/index.js"
     },
     "keywords": [
         "Detect",

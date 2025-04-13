@@ -20,7 +20,7 @@
         "prebuild": "rimraf dist",
         "test": "mocha dist/*.test.js",
         "scan": "node ./dist/index.js scan",
-        "patterns": "node ./dist/index.js patterns",
+        "secrets": "node ./dist/index.js secrets",
         "files": "node ./dist/index.js files",
         "version": "node ./dist/index.js version"
     },

@@ -16,7 +16,7 @@ The "secrets" command is aliased here to the installed evsecrets lib.
 
 ```
     "scripts": {
-        "secrets": "./node_modules/evsecrets/dist/index.js"
+        "evsecrets": "./node_modules/evsecrets/dist/index.js"
     },
 ```
 
@@ -27,17 +27,8 @@ As shown in this directory.
 ### Run from the CLI
 
 ```
-$ npm run secrets patterns
-
-> evsecrets-console-app@0.1.0 secrets
-> ./node_modules/evsecrets/dist/index.js patterns
-
-[
-  'CONN_STR',
-  'CONNECTION_STR',
-  'CONNECTION_STRING',
-  '_KEY',
-  '_URI',
-  '_URL'
-]
+$ npm run evsecrets version
+$ npm run evsecrets secrets
+$ npm run evsecrets files
+$ npm run evsecrets scan
 ```

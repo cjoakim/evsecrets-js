@@ -2,7 +2,7 @@
 
 /**
  * Entry point for evsecrets.
- * Chris Joakim,  2025
+ * Chris Joakim, 2025
  */
 
 import { EnvScanner } from "./EnvScanner";
@@ -10,10 +10,10 @@ import { FileUtil } from "./FileUtil";
 
 function displayCommandLineExamples() {
     console.log('-');
-    console.log('npm exec evsecrets patterns');
-    console.log('npm exec evsecrets files');
-    console.log('npm exec evsecrets scan');
-    console.log('npm exec evsecrets version');
+    console.log('npx -- evsecrets@0.5.0 version');
+    console.log('npx -- evsecrets@0.5.0 secrets');
+    console.log('npx -- evsecrets@0.5.0 files');
+    console.log('npx -- evsecrets@0.5.0 scan');
     console.log('');
 }
 
@@ -22,8 +22,11 @@ async function main() {
     let func = process.argv[2];
     let es   = new EnvScanner();
     switch (func) {
-        case "patterns":
-            console.log(es.envVarPatterns);
+        case "version":
+          console.log(EnvScanner.version());
+          break;
+        case "secrets":
+            es.secrets();
             break;
         case "files":
             let files = await es.filteredFilenamesList();
@@ -31,9 +34,6 @@ async function main() {
             break;
         case "scan":
             let results = await es.scan(null);
-            break;
-        case "version":
-            console.log(EnvScanner.version());
             break;
         default:
             displayCommandLineExamples();

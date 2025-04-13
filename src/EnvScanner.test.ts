@@ -1,5 +1,5 @@
 /**
- * Unit tests for class EnvScanner
+ * Unit tests for class EnvScanner.
  * Chris Joakim, 2025
  */
 

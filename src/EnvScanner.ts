@@ -1,14 +1,11 @@
 /**
- * 
+ * This is the primary implementation class in this library.
  * Chris Joakim, 2025
  */
 
-import fs from "fs";
 import os from "os";
 import path from "path";
 import util from "util";
-
-import { exec } from "child_process";
 
 import { FileUtil } from "./FileUtil";
 
@@ -92,6 +89,19 @@ export class EnvScanner {
             }
         }
         return Object.keys(names).sort();
+    }
+
+    secrets() : void {
+        let secretEnvVarNames = this.secretEnvVars();
+        let msg = util.format(
+            '%s environment variables with secrets per your evsecrets.json configuration:',
+            secretEnvVarNames.length);
+        console.log(msg);
+        for (let e = 0; e < secretEnvVarNames.length; e++) {
+            let envvar = secretEnvVarNames[e];
+            let value = process.env[envvar];
+            console.log(envvar + ' --> ' + value);
+        }
     }
 
     async scan(codebaseRootDir: string = null, silent: boolean = false) : Promise<Array<string>> {
