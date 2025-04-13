@@ -72,7 +72,7 @@ export class EnvScanner {
      * Return the version of this npm package.
      */
     static version() : string {
-        return '0.4.0';
+        return '0.5.0';
     }
 
     /**

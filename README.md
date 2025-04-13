@@ -5,6 +5,16 @@ Home of the **evsecrets** npm library.
 The purpose of this library is to detect environment variable secrets
 in your codebase **before** you push your code to GitHub.
 
+Five CLI subcommands are implemented:
+
+| Subcommand | Function                |
+| ---------- | ------------------------------------------------------------------------------------- |
+| version    | Display the version of the evsecrets library                                          |
+| patterns   | Display the environment variable patterns that will be used to determine the secrets  |
+| secrets    | Display the pattern-matched environment variables and their values                    |
+| files      | Display the filtered list of files that will be scanned per your evsecrets.json file  |
+| scan       | Scan the filtered files list in your codebase for the identified secrets              |
+
 ## Installation
 
 ### Global Installation
@@ -35,6 +45,10 @@ Add script alias command in package.json:
 Then, execute the alias command:
 
 ```
+$ npm run secrets version
+$ npm run secrets patterns
+$ npm run secrets secrets
+$ npm run secrets files
 $ npm run secrets scan
 ```
 
@@ -97,11 +111,14 @@ will be identified if it exists in your codebase.
 
 ## Use 
 
+The **npx** program within Node.js can be used to execute this library as follows:
+
 ```
-$ npx -- evsecrets@0.4.0 version
-$ npx -- evsecrets@0.4.0 patterns
-$ npx -- evsecrets@0.4.0 files
-$ npx -- evsecrets@0.4.0 scan
+$ npx -- evsecrets@0.5.0 version
+$ npx -- evsecrets@0.5.0 patterns
+$ npx -- evsecrets@0.5.0 secrets
+$ npx -- evsecrets@0.5.0 files
+$ npx -- evsecrets@0.5.0 scan
 ```
 
 ## Version History
@@ -113,10 +130,33 @@ $ npx -- evsecrets@0.4.0 scan
 |  0.2.0  | 2025/04/13 | Sample console_app                                              |
 |  0.1.0  | 2025/04/13 | Initial release                                                 |
 
+## Common Errors
+
+### Maximum call stack size exceeded
+
+```
+$ npx -- evsecrets@0.5.0 scan
+RangeError: Maximum call stack size exceeded
+```
+
+This error occurs when the scanned directory contains too many files.
+In this case reduce the scope of the scanning by 
+
+### Permission denied
+
+```
+./node_modules/evsecrets/dist/index.js: Permission denied
+```
+
+In this case, on Linux and macOS, make the file executable with this command:
+
+```
+$ chmod 744 ./node_modules/evsecrets/dist/index.js
+```
 
 --- 
 
-## Development Use
+## Developer Notes
 
 Instructions for developing, testing, packaging, and publishing this library.
 
