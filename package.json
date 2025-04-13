@@ -1,0 +1,51 @@
+{
+    "name": "evsecrets",
+    "version": "0.1.0",
+    "description": "Detect environment variable secrets in your codebase before you push your code to GitHub.",
+    "homepage": "https://github.com/cjoakim/evsecrets",
+    "main": "./dist/index.js",
+    "bin": {
+        "evsecrets": "node ./dist/index.js"
+    },
+    "types": "dist/index.d.ts",
+    "engines": {
+        "node": ">=22.0.0"
+    },
+    "files": [
+        "dist",
+        "LICENSE",
+        "README.md",
+        "package.json"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "prebuild": "rimraf dist",
+        "test": "mocha dist/*.test.js",
+        "scan": "node ./dist/index.js scan",
+        "patterns": "node ./dist/index.js patterns",
+        "files": "node ./dist/index.js files"
+    },
+    "keywords": [
+        "Detect",
+        "secrets",
+        "codebase",
+        "environment",
+        "variables"
+    ],
+    "author": "Chris Joakim",
+    "license": "MIT",
+    "dependencies": {
+        "dotenv": "^16.5.0",
+        "ts-node": "^10.9.2",
+        "winston": "^3.17.0"
+    },
+    "devDependencies": {
+        "@types/chai": "^5.2.1",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "^22.14.1",
+        "chai": "^5.2.0",
+        "mocha": "^11.1.0",
+        "rimraf": "6.0.1",
+        "typescript": "^5.8.3"
+    }
+}
