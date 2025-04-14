@@ -123,16 +123,17 @@ $ npx -- evsecrets scan
 
 - or - 
 
-$ npx -- evsecrets@0.5.0 version
-$ npx -- evsecrets@0.5.0 secrets
-$ npx -- evsecrets@0.5.0 files
-$ npx -- evsecrets@0.5.0 scan
+$ npx -- evsecrets@0.6.0 version
+$ npx -- evsecrets@0.6.0 secrets
+$ npx -- evsecrets@0.6.0 files
+$ npx -- evsecrets@0.6.0 scan
 ```
 
 ## Version History
 
 | Version |    Date    | Changes                                                         |
 | ------- | ---------- | --------------------------------------------------------------- |
+|  0.6.0  | 2025/04/14 | Ported to the @nodelib/fs.walk library                          |
 |  0.5.0  | 2025/04/13 | Added 'secrets' subcommand, removed 'patterns'                  |
 |  0.4.0  | 2025/04/13 | npx usage and -g installation                                   |
 |  0.3.0  | 2025/04/13 | Simplified bin command, added version CLI function              |
@@ -144,7 +145,7 @@ $ npx -- evsecrets@0.5.0 scan
 ### Maximum call stack size exceeded
 
 ```
-$ npx -- evsecrets@0.5.0 scan
+$ npx -- evsecrets@0.6.0 scan
 RangeError: Maximum call stack size exceeded
 ```
 
@@ -239,3 +240,9 @@ $ npm run scan
 $ npm login
 $ npm publish
 ```
+
+---
+
+https://www.npmjs.com/package/@nodelib/fs.walk
+https://www.npmjs.com/package/walk 
+https://www.npmjs.com/package/node-os-walk   3y

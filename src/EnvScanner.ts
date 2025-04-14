@@ -22,46 +22,20 @@ export class EnvScanner {
         this.allFilenames = Array<string>();
 
         try {
+            // first set these arrays to their defaults
+            this.envVarPatterns = this.defaultEnvVarPatterns();
+            this.excludeFilePatterns = this.defaultExcludeFilePatterns();
+            this.excludeFileSuffixes = this.defaultExcludeFileSuffixes();
+
+            // next try to read the evsecrets.json file
             let txt = this.fu.readTextFileSync("evsecrets.json");
             let obj = JSON.parse(txt);
             this.envVarPatterns = obj['env_var_patterns'];
             this.excludeFilePatterns = obj['exclude_file_patterns'];
             this.excludeFileSuffixes = obj['exclude_file_suffixes'];
-            this.excludeFilePatterns.push("git/");
         }
         catch (error) {
             console.error("EnvScanner error in constructor, using defaults");
-            console.error(error);
-            if (this.excludeFilePatterns === null) {
-                this.envVarPatterns = [
-                    "CONN_STR",
-                    "CONNECTION_STR",
-                    "CONNECTION_STRING",
-                    "_KEY",
-                    "_URI",
-                    "_URL"
-                ];
-            }
-            if (this.excludeFilePatterns === null) {
-                this.excludeFilePatterns = [
-                    "git/",
-                    "bin/",
-                    "obj/",
-                    "tmp/",
-                    "node_modules/",
-                    "venv/"
-                ];
-            }
-            if (this.excludeFileSuffixes === null) {
-                this.excludeFileSuffixes = [
-                    ".class",
-                    ".jar",
-                    ".pyc",
-                    ".tar",
-                    ".zip"
-                ];
-            }
-            console.log("EnvScanner.envVarPatterns init from defaults")
         }
     }
 
@@ -69,7 +43,7 @@ export class EnvScanner {
      * Return the version of this npm package.
      */
     static version() : string {
-        return '0.5.0';
+        return '0.6.0';
     }
 
     /**
@@ -281,6 +255,73 @@ export class EnvScanner {
             }
         }
         return false;
+    }
+
+    defaultEnvVarPatterns() {
+        return [
+            "_KEY",
+            "_URI",
+            "_URL",
+            "CONN_STR",
+            "CONNECTION_STR",
+            "CONNECTION_STRING"
+        ];
+    }
+
+    defaultExcludeFilePatterns() {
+        return [
+            "__MACOSX/",
+            "__pycache__/",
+            ".code-workspace",
+            ".git/",
+            ".git/",
+            ".gradle/",
+            ".idea/",
+            ".vscode/",
+            "bin/",
+            "build/",
+            "htmlcov/",
+            "man/",
+            "node_modules/",
+            "obj/",
+            "opt/",
+            "tmp/",
+            "venv/"
+        ];
+    }
+
+    defaultExcludeFileSuffixes() {
+        return [
+            ".acc",
+            ".avi",
+            ".bmp",
+            ".class",
+            ".dll",
+            ".doc",
+            ".docx",
+            ".DS_Store",
+            ".exe",
+            ".gif",
+            ".jar",
+            ".jpeg",
+            ".jpg",
+            ".mov",
+            ".mp3",
+            ".mp4",
+            ".pdf",
+            ".png",
+            ".ppt",
+            ".pptx",
+            ".pyc",
+            ".so",
+            ".tar",
+            ".tiff",
+            ".wav",
+            ".xls",
+            ".xlsx",
+            ".vscode",
+            ".zip"
+        ];
     }
 
 }

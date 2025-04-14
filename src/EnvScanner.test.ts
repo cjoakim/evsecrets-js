@@ -21,8 +21,7 @@ describe('EnvScanner: constructor', () => {
         let es = new EnvScanner();
         let patterns = es.envVarPatterns.sort();
         //console.log(patterns);
-        expect(patterns.length).to.be.above(5);
-        expect(patterns.length).to.be.below(10);
+        expect(patterns.length).to.be.equal(6);
         let expectedPatterns = [
             "CONN_STR",
             "CONNECTION_STR",
@@ -41,10 +40,9 @@ describe('EnvScanner: constructor', () => {
         let es = new EnvScanner();
         let patterns = es.excludeFilePatterns.sort();
         //console.log(patterns);
-        expect(patterns.length).to.be.above(5);
-        expect(patterns.length).to.be.below(8);
+        expect(patterns.length).to.be.equal(17);
         let expectedPatterns = [
-            "git/",
+            ".git/",
             "bin/",
             "obj/",
             "tmp/",
@@ -61,8 +59,7 @@ describe('EnvScanner: constructor', () => {
         let es = new EnvScanner();
         let suffixes = es.excludeFileSuffixes.sort();
         //console.log(suffixes);
-        expect(suffixes.length).to.be.above(4);
-        expect(suffixes.length).to.be.below(8);
+        expect(suffixes.length).to.be.equal(29);
         let expectedSuffixes = [
             ".class",
             ".jar",
