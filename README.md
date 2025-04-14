@@ -66,7 +66,8 @@ In the root directory of your Node.js project, create a file named
 **evsecrets.json** that looks like the following.
 
 Edit the values within **env_var_patterns**, **exclude_file_patterns** and
-**exclude_file_suffixes** per your needs.
+**exclude_file_suffixes** per your needs.  The values shown below are
+the defaults implemented in the program.
 
 These determine what environment variables to obtain your secrets from,
 the files to be excluded from scanning, and the filetypes to be excluded
@@ -75,25 +76,62 @@ from scanning, respectively.
 ```
 {
     "env_var_patterns": [
-        "CONN_STR",
-        "CONNECTION_STR",
-        "CONNECTION_STRING",
         "_KEY",
         "_URI",
-        "_URL"
+        "_URL",
+        "CONN_STR",
+        "CONNECTION_STR",
+        "CONNECTION_STRING"
     ],
     "exclude_file_patterns": [
+        "__MACOSX/",
+        "__pycache__/",
+        ".code-workspace",
+        ".git/",
+        ".git/",
+        ".gradle/",
+        ".idea/",
+        ".vscode/",
         "bin/",
-        "obj/",
-        "tmp/",
+        "build/",
+        "htmlcov/",
+        "man/",
         "node_modules/",
+        "obj/",
+        "opt/",
+        "tmp/",
         "venv/"
     ],
     "exclude_file_suffixes": [
+        ".acc",
+        ".avi",
+        ".bmp",
         ".class",
+        ".dll",
+        ".doc",
+        ".docx",
+        ".DS_Store",
+        ".exe",
+        ".gif",
         ".jar",
+        ".jpeg",
+        ".jpg",
+        ".mov",
+        ".mp3",
+        ".mp4",
+        ".pdf",
+        ".png",
+        ".ppt",
+        ".pptx",
         ".pyc",
+        ".so",
         ".tar",
+        ".tgz",
+        ".tiff",
+        ".wav",
+        ".xls",
+        ".xlsx",
+        ".vscode",
         ".zip"
     ]
 }
@@ -131,26 +169,16 @@ $ npx -- evsecrets@0.6.0 scan
 
 ## Version History
 
-| Version |    Date    | Changes                                                         |
-| ------- | ---------- | --------------------------------------------------------------- |
-|  0.6.0  | 2025/04/14 | Ported to the @nodelib/fs.walk library                          |
-|  0.5.0  | 2025/04/13 | Added 'secrets' subcommand, removed 'patterns'                  |
-|  0.4.0  | 2025/04/13 | npx usage and -g installation                                   |
-|  0.3.0  | 2025/04/13 | Simplified bin command, added version CLI function              |
-|  0.2.0  | 2025/04/13 | Sample console_app                                              |
-|  0.1.0  | 2025/04/13 | Initial release                                                 |
+| Version |    Date    | Changes                                                           |
+| ------- | ---------- | ----------------------------------------------------------------- |
+|  0.6.0  | 2025/04/14 | Ported to the @nodelib/fs.walk library, made codebase synchronous |
+|  0.5.0  | 2025/04/13 | Added 'secrets' subcommand, removed 'patterns'                    |
+|  0.4.0  | 2025/04/13 | npx usage and -g installation                                     |
+|  0.3.0  | 2025/04/13 | Simplified bin command, added version CLI function                |
+|  0.2.0  | 2025/04/13 | Sample console_app                                                |
+|  0.1.0  | 2025/04/13 | Initial release                                                   |
 
 ## Common Errors
-
-### Maximum call stack size exceeded
-
-```
-$ npx -- evsecrets@0.6.0 scan
-RangeError: Maximum call stack size exceeded
-```
-
-This error occurs when the scanned directory contains too many files.
-In this case reduce the scope of the scanning by 
 
 ### Permission denied
 

@@ -59,7 +59,7 @@ describe('EnvScanner: constructor', () => {
         let es = new EnvScanner();
         let suffixes = es.excludeFileSuffixes.sort();
         //console.log(suffixes);
-        expect(suffixes.length).to.be.equal(29);
+        expect(suffixes.length).to.be.equal(30);
         let expectedSuffixes = [
             ".class",
             ".jar",
@@ -102,9 +102,9 @@ describe('EnvScanner: secretEnvVars()', () => {
 
 describe('EnvScanner: filteredFilenamesList()', () => {
 
-    it('should return the correct filteredFilenamesList() list', async function() {
+    it('should return the correct filteredFilenamesList() list', function() {
         let es = new EnvScanner();
-        let filteredFiles = await es.filteredFilenamesList();
+        let filteredFiles = es.filteredFilenamesList();
         //console.log("filteredFiles.length: " + filteredFiles.length);
         for (let i = 0; i < filteredFiles.length; i++) {
             let filename = filteredFiles[i];
@@ -134,11 +134,11 @@ describe('EnvScanner: filteredFilenamesList()', () => {
 
 describe('EnvScanner: scan()', () => {
 
-    it('should scan the codebase for secrets', async function() {
+    it('should scan the codebase for secrets', function() {
         let es = new EnvScanner();
         let expectedFilename = 'evsecrets-js/src/EnvScanner.ts';
         let expectedFileFound = false;
-        let results = await es.scan(null, true);
+        let results = es.scan(null, true);
         for (let i = 0; i < results.length; i++) {
             if (results[i].includes(expectedFilename)) {
                 expectedFileFound = true;

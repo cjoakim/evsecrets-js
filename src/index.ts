@@ -17,7 +17,7 @@ function displayCommandLineExamples() {
     console.log('');
 }
 
-async function main() {
+function main() {
   try {
     let func = process.argv[2];
     let es   = new EnvScanner();
@@ -29,11 +29,14 @@ async function main() {
             es.secrets();
             break;
         case "files":
-            let files = await es.filteredFilenamesList();
+            let files = es.filteredFilenamesList();
             console.log(files);
             break;
         case "scan":
-            let results = await es.scan(null);
+            let results = es.scan(null);
+            break;
+        case "walk":
+            es.walkFs(null);
             break;
         default:
             displayCommandLineExamples();

@@ -9,10 +9,10 @@ import { EnvScanner } from "evsecrets";
 
 function displayCommandLineExamples() {
   console.log('-');
-  console.log('npx -- evsecrets@0.5.0 version');
-  console.log('npx -- evsecrets@0.5.0 secrets');
-  console.log('npx -- evsecrets@0.5.0 files');
-  console.log('npx -- evsecrets@0.5.0 scan');
+  console.log('npx -- evsecrets@0.6.0 version');
+  console.log('npx -- evsecrets@0.6.0 secrets');
+  console.log('npx -- evsecrets@0.6.0 files');
+  console.log('npx -- evsecrets@0.6.0 scan');
   console.log('-');
   console.log('npm run evsecrets version');
   console.log('npm run evsecrets secrets');
@@ -21,7 +21,7 @@ function displayCommandLineExamples() {
   console.log('');
 }
 
-async function main() {
+function main() {
   try {
     let func = process.argv[2];
     let es   = new EnvScanner();
@@ -33,11 +33,11 @@ async function main() {
           es.secrets();
           break;
       case "files":
-          let files = await es.filteredFilenamesList();
+          let files = es.filteredFilenamesList();
           console.log(files);
           break;
       case "scan":
-          let results = await es.scan(null);
+          let results = es.scan(null);
           break;
       default:
           displayCommandLineExamples();

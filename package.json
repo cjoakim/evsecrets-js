@@ -22,7 +22,8 @@
         "scan": "node ./dist/index.js scan",
         "secrets": "node ./dist/index.js secrets",
         "files": "node ./dist/index.js files",
-        "version": "node ./dist/index.js version"
+        "version": "node ./dist/index.js version",
+        "walk": "node ./dist/index.js walk"
     },
     "keywords": [
         "Detect",
@@ -34,6 +35,7 @@
     "author": "Chris Joakim",
     "license": "MIT",
     "dependencies": {
+        "@nodelib/fs.walk": "^3.0.1",
         "dotenv": "^16.5.0",
         "ts-node": "^10.9.2",
         "winston": "^3.17.0"

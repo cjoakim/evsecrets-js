@@ -7,6 +7,8 @@ import os from "os";
 import path from "path";
 import util from "util";
 
+import * as fsWalk from '@nodelib/fs.walk';
+
 import { FileUtil } from "./FileUtil";
 
 export class EnvScanner {
@@ -78,7 +80,7 @@ export class EnvScanner {
         }
     }
 
-    async scan(codebaseRootDir: string = null, silent: boolean = false) : Promise<Array<string>> {
+    scan(codebaseRootDir: string = null, silent: boolean = false) : Array<string> {
         let results = new Array<string>();
         try {
             let secrets = new Array<string>();
@@ -88,7 +90,7 @@ export class EnvScanner {
                 let envvar = envVars[i];
                 secrets.push(process.env[envvar]);
             }
-            let codebaseFilenames = await this.filteredFilenamesList(codebaseRootDir);
+            let codebaseFilenames = this.filteredFilenamesList(codebaseRootDir);
             for (let i = 0; i < codebaseFilenames.length; i++) {
                 let filename = codebaseFilenames[i];
                 let lines = this.fu.readTextFileAsLinesSync(filename);
@@ -126,9 +128,35 @@ export class EnvScanner {
         return results;
     }
 
-    async filteredFilenamesList(codebaseRootDir: string = null) : Promise<Array<string>> {
-        this.allFilenames = Array<string>();
-        this.allFilenames = await this.walkFiles(codebaseRootDir);
+    /**
+     * Recursively walk the filesystem from the given codebaseRootDir.
+     * Return an unfiltered list of all of the files found; not directories.
+     */
+    walkFs(codebaseRootDir: string = null) : Array<string> {
+        let files = Array<string>();
+        if (codebaseRootDir === null) {
+            codebaseRootDir = process.cwd();
+        }
+        let walkSettings = {};
+        walkSettings['stats'] = false;
+        walkSettings['followSymbolicLinks'] = false;
+
+        // This functionality is implemented with the '@nodelib/fs.walk' library
+        const entries = fsWalk.walkSync(codebaseRootDir, walkSettings);
+
+        for (let i = 0; i < entries.length; i++) {
+            let entry = entries[i];
+            // See https://nodejs.org/api/fs.html#direntisfile
+            if (entry.dirent.isFile()) {  
+                files.push(entry.path);
+            }
+        }
+        this.fu.writeTextFileSync("tmp/walkFs.json", JSON.stringify(files, null, 2));
+        return files;
+    }
+
+    filteredFilenamesList(codebaseRootDir: string = null) : Array<string> {
+        this.allFilenames = this.walkFs(codebaseRootDir);
         let filteredFilenames = new Object();
 
         for (let i = 0; i < this.allFilenames.length; i++) {
@@ -138,32 +166,6 @@ export class EnvScanner {
             }
         }
         return Object.keys(filteredFilenames).sort();
-    }
-
-    /**
-     * Recursively collect a list of all filenames within codebaseRootDir.
-     */
-    async walkFiles(
-        codebaseRootDir: string = null) : Promise<Array<string>> {
-        if (codebaseRootDir === null) {
-            codebaseRootDir = process.cwd();
-        }
-        const fsp = require('fs').promises;
-        const entries = await fsp.readdir(codebaseRootDir);
-        for (const entry of entries) {
-            const entryPath = path.join(codebaseRootDir, entry);
-            const stat = await fsp.stat(entryPath);
-            if (stat.isDirectory()) {
-                if (this.includeThisDirectory(entryPath)) {
-                    const subFiles = await this.walkFiles(entryPath);
-                    this.allFilenames.push(...subFiles); // Spread syntax to add all elements
-                }    
-            }
-            else if (stat.isFile()) {
-                this.allFilenames.push(entryPath);
-            }
-        }
-        return this.allFilenames;
     }
 
     // ========== api methods above; private methods below ==========
@@ -315,6 +317,7 @@ export class EnvScanner {
             ".pyc",
             ".so",
             ".tar",
+            ".tgz",
             ".tiff",
             ".wav",
             ".xls",
