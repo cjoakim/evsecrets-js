@@ -101,10 +101,10 @@ npm notice
 evsecrets-0.7.0.tgz
 ```
 
-### The console_app
+### Test with the console_app
 
 Before publishing the packaged library, test the packaged library
-the the **console_app** in this repo.
+with the **console_app** in this repo.
 
 Update the package.json file to use the packaged **tgz** file.
 
@@ -130,9 +130,3 @@ $ npm run secrets scan
 $ npm login
 $ npm publish
 ```
-
----
-
-https://www.npmjs.com/package/@nodelib/fs.walk
-https://www.npmjs.com/package/walk 
-https://www.npmjs.com/package/node-os-walk   3y
