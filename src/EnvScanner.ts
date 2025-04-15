@@ -14,7 +14,7 @@ import { FileUtil } from "./FileUtil";
 export class EnvScanner {
 
     static CONFIG_FILE: string = "evsecrets.json";
-    static VERSION: string = "0.7.0";
+    static VERSION: string = "0.8.0";
 
     fu : FileUtil = null;
     envVarPatterns : Array<string> = null;
@@ -35,11 +35,22 @@ export class EnvScanner {
             this.excludeFileSuffixes = this.defaultExcludeFileSuffixes();
 
             // next try to read the 'evsecrets.json' configuration file
-            let txt = this.fu.readTextFileSync(EnvScanner.CONFIG_FILE);
-            let obj = JSON.parse(txt);
-            this.envVarPatterns = obj['env_var_patterns'];
-            this.excludeFilePatterns = obj['exclude_file_patterns'];
-            this.excludeFileSuffixes = obj['exclude_file_suffixes'];
+            if (this.fu.fileExists(EnvScanner.CONFIG_FILE)) {
+                try {
+                    let txt = this.fu.readTextFileSync(EnvScanner.CONFIG_FILE);
+                    let obj = JSON.parse(txt);
+                    this.envVarPatterns = obj['env_var_patterns'];
+                    this.excludeFilePatterns = obj['exclude_file_patterns'];
+                    this.excludeFileSuffixes = obj['exclude_file_suffixes']; 
+                }
+                catch (error) {
+                    console.error(
+                        "error processing " + EnvScanner.CONFIG_FILE + ". using defaults.");
+                }
+            }
+            else {
+                console.log("file " + EnvScanner.CONFIG_FILE + " does not exist, using defaults.")
+            }
 
             // verbose and debugging settings
             this.verbose = this.cliArgPresent("--verbose");
@@ -49,7 +60,7 @@ export class EnvScanner {
             }
         }
         catch (error) {
-            console.error("error in constructor, using defaults");
+            console.error("evsecrets - error in constructor");
         }
     }
 

@@ -234,6 +234,7 @@ during a **scan**.
 
 | Version |    Date    | Changes                                                           |
 | ------- | ---------- | ----------------------------------------------------------------- |
+|  0.8.0  | 2025/04/15 | Initialization handling for absent config file                    |
 |  0.7.0  | 2025/04/15 | Updated GitHub URL, updated installation.  Added init subcommand  |
 |  0.6.0  | 2025/04/14 | Ported to the @nodelib/fs.walk library, made codebase synchronous |
 |  0.5.0  | 2025/04/13 | Added 'secrets' subcommand, removed 'patterns'                    |

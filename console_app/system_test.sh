@@ -32,6 +32,11 @@ echo '=========='
 echo 'scan:'
 npm run secrets scan  -- --verbose --tmp-file-outputs
 
+echo '=========='
+echo 'init :'
+rm evsecrets.json
+npm run secrets init  -- --verbose
+
 
 # The following line is intentional, it contains the public value of the
 # Cosmos DB local emulator, in my system as env var AZURE_COSMOSDB_EMULATOR_KEY.

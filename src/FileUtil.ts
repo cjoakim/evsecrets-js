@@ -6,12 +6,31 @@
  * Chris Joakim, 2025
  */
 
-import fs from "fs";
+const fs = require('node:fs');
+
 import os from "os";
 import path from "path";
 
+
 export class FileUtil {
     
+    constructor() {
+
+    }
+
+    /**
+     * 
+     * @see https://nodejs.org/api/fs.html#fsaccesspath-mode-callback
+     */
+    fileExists(filename:string) : boolean {
+        try {
+            const stats = fs.statSync(filename);
+            return stats.isFile();
+        }
+        catch (err) {
+            return false;
+        }
+    }
 
     /**
      * Return the current directory where this node.js process is running.

@@ -1,6 +1,6 @@
 {
     "name": "evsecrets",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "description": "Detect environment variable secrets in your codebase before you push your code to GitHub.",
     "homepage": "https://github.com/cjoakim/evsecrets-js",
     "main": "./dist/index.js",
