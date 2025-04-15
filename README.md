@@ -29,11 +29,12 @@ See the **Configuration: evsecrets.json** section below.
 
 ## CLI subcommands
 
-These four subcommands are implemented.
+These five subcommands are implemented:
 
 | Subcommand | Function                                                                                |
 | ---------- | --------------------------------------------------------------------------------------- |
 | version    | Display the version of the evsecrets library (i.e. - '0.7.0')                           |
+| init       | Create a evsecrets.json file in the current directory.  Edit it as necessary            |
 | secrets    | Display the pattern-matched environment variables and their values (i.e. - the secrets) |
 | files      | Display the filtered list of files that will be scanned per your evsecrets.json file    |
 | scan       | Scan the filtered files list in your codebase for the identified secrets                |
@@ -45,6 +46,7 @@ and the four subcommands, as follows:
 
 ```
 $ npx -- evsecrets version
+$ npx -- evsecrets init
 $ npx -- evsecrets secrets
 $ npx -- evsecrets files
 $ npx -- evsecrets scan
@@ -73,9 +75,54 @@ Then, execute the alias command:
 
 ```
 $ npm run secrets version
+$ npm run secrets init
 $ npm run secrets secrets
 $ npm run secrets files
 $ npm run secrets scan
+```
+
+### Optional CLI flag arguments 
+
+The **--verbose** command-line arg can be used to produce additional output
+for your understanding and debugging purposes.
+
+The **--tmp-file-outputs** command-line arg can be used to write json
+files to the **tmp** directory within the current directory.
+This json files contain a list all files found, and the files that are
+included for scanning.
+
+For example:
+
+```
+$ npm run scan -- --tmp-file-outputs
+...
+file written: tmp/evsecrets-walkFs.json
+file written: tmp/evsecrets-filteredFilenamesList.json
+```
+
+```
+$ npm run scan -- --verbose
+...
+includeThisFile: /Users/cjoakim/github/evsecrets-js/.gitignore --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/LICENSE --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/README.md --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/backup.xml --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/build.ps1 --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/build.sh --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/devnotes.md --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/evsecrets-0.7.0.tgz --> false
+includeThisFile: /Users/cjoakim/github/evsecrets-js/evsecrets.json --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/install.ps1 --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/install.sh --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/pack.ps1 --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/pack.sh --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/package-lock.json --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/package.json --> true
+includeThisFile: /Users/cjoakim/github/evsecrets-js/tsconfig.json --> true
+...
+includeThisFile: /Users/cjoakim/github/evsecrets-js/tmp/evsecrets-filteredFilenamesList.json --> false
+includeThisFile: /Users/cjoakim/github/evsecrets-js/tmp/evsecrets-walkFs.json --> false
+...
 ```
 
 Linux/macOS users may need to make the script executable:
@@ -178,7 +225,7 @@ Then the value 'C2y6yDjf5' will be identified if it exists in your codebase duri
 
 | Version |    Date    | Changes                                                           |
 | ------- | ---------- | ----------------------------------------------------------------- |
-|  0.7.0  | 2025/04/15 | Updated GitHub URL, updated installation                          |
+|  0.7.0  | 2025/04/15 | Updated GitHub URL, updated installation.  Added init subcommand  |
 |  0.6.0  | 2025/04/14 | Ported to the @nodelib/fs.walk library, made codebase synchronous |
 |  0.5.0  | 2025/04/13 | Added 'secrets' subcommand, removed 'patterns'                    |
 |  0.4.0  | 2025/04/13 | npx usage and -g installation                                     |

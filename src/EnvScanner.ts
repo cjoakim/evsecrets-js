@@ -4,20 +4,25 @@
  */
 
 import os from "os";
-import path from "path";
 import util from "util";
 
 import * as fsWalk from '@nodelib/fs.walk';
 
 import { FileUtil } from "./FileUtil";
 
+
 export class EnvScanner {
+
+    static CONFIG_FILE: string = "evsecrets.json";
+    static VERSION: string = "0.7.0";
 
     fu : FileUtil = null;
     envVarPatterns : Array<string> = null;
     excludeFilePatterns : Array<string> = null;
     excludeFileSuffixes : Array<string> = null;
     allFilenames : Array<string> = null;
+    verbose : boolean = false;
+    tmpFileOutputs : boolean = false;
 
     constructor() {
         this.fu = new FileUtil();
@@ -29,15 +34,22 @@ export class EnvScanner {
             this.excludeFilePatterns = this.defaultExcludeFilePatterns();
             this.excludeFileSuffixes = this.defaultExcludeFileSuffixes();
 
-            // next try to read the evsecrets.json file
-            let txt = this.fu.readTextFileSync("evsecrets.json");
+            // next try to read the 'evsecrets.json' configuration file
+            let txt = this.fu.readTextFileSync(EnvScanner.CONFIG_FILE);
             let obj = JSON.parse(txt);
             this.envVarPatterns = obj['env_var_patterns'];
             this.excludeFilePatterns = obj['exclude_file_patterns'];
             this.excludeFileSuffixes = obj['exclude_file_suffixes'];
+
+            // verbose and debugging settings
+            this.verbose = this.cliArgPresent("--verbose");
+            this.tmpFileOutputs = this.cliArgPresent("--tmp-file-outputs");
+            if (this.verbose) {
+                console.log("verbose: " + this.verbose + ", tmpFileOutputs: " + this.tmpFileOutputs);
+            }
         }
         catch (error) {
-            console.error("EnvScanner error in constructor, using defaults");
+            console.error("error in constructor, using defaults");
         }
     }
 
@@ -45,8 +57,45 @@ export class EnvScanner {
      * Return the version of this npm package.
      */
     static version() : string {
-        return '0.7.0';
+        return EnvScanner.VERSION;
     }
+
+    /**
+     * Write a default 'evsecrets.json' file in the current directory.
+     */
+    init() : boolean {
+        try {
+            let config = this.defaultConfig();
+            config['version'] = EnvScanner.version();
+            config['gen_timestamp'] = this.getFormattedTimestamp();
+            let outfile = EnvScanner.CONFIG_FILE;
+            this.fu.writeTextFileSync(outfile, JSON.stringify(config, null, 2));
+            if (this.verbose) {
+                console.log("file written: " + EnvScanner.CONFIG_FILE);
+            }
+            return true;
+        }
+        catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
+    /**
+     * Return a timestamp string, for your local timezone, in 'YYYY-MM-DD HH:MM:SS' format.
+     * For example: '2025-04-15 13:04:39'
+     */
+    getFormattedTimestamp() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const formattedTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        return formattedTimestamp;
+      }
 
     /**
      * Return an array of the secret environment variable names
@@ -67,6 +116,9 @@ export class EnvScanner {
         return Object.keys(names).sort();
     }
 
+    /**
+     * Display a list of your secrets defined in your specified environment variables.
+     */
     secrets() : void {
         let secretEnvVarNames = this.secretEnvVars();
         let msg = util.format(
@@ -80,6 +132,11 @@ export class EnvScanner {
         }
     }
 
+    /**
+     * Scan your codebase for the secrets defined in your environment variables,
+     * per the configuration in evsecrets.json or the default configuration.
+     * Display the matches and line numbers in the terminal output.
+     */
     scan(codebaseRootDir: string = null, silent: boolean = false) : Array<string> {
         let results = new Array<string>();
         try {
@@ -129,6 +186,35 @@ export class EnvScanner {
     }
 
     /**
+     * Return a filtered list of files to scan for secrets.
+     */
+    filteredFilenamesList(codebaseRootDir: string = null) : Array<string> {
+        this.allFilenames = this.walkFs(codebaseRootDir);
+        let filteredFilenames = new Object();
+        for (let i = 0; i < this.allFilenames.length; i++) {
+            let filename = this.allFilenames[i];
+            if (this.includeThisFile(filename)) {
+                filteredFilenames[filename] = 1;
+            }
+        }
+
+        if (this.verbose) {
+            console.log("filteredFilenamesList length: " + Object.keys(filteredFilenames).length);
+        }
+        if (this.tmpFileOutputs) {
+            try {
+                let outfile = "tmp/evsecrets-filteredFilenamesList.json";
+                this.fu.writeTextFileSync(outfile, JSON.stringify(filteredFilenames, null, 2));
+                console.log("file written: " + outfile);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }
+        return Object.keys(filteredFilenames).sort();
+    }
+
+    /**
      * Recursively walk the filesystem from the given codebaseRootDir.
      * Return an unfiltered list of all of the files found; not directories.
      */
@@ -151,68 +237,46 @@ export class EnvScanner {
                 files.push(entry.path);
             }
         }
-        this.fu.writeTextFileSync("tmp/walkFs.json", JSON.stringify(files, null, 2));
+
+        if (this.verbose) {
+            console.log("walkFs length: " + files.length);
+        }
+        if (this.tmpFileOutputs) {
+            try {
+                let outfile = "tmp/evsecrets-walkFs.json";
+                this.fu.writeTextFileSync(outfile, JSON.stringify(files, null, 2));
+                console.log("file written: " + outfile);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }
         return files;
     }
 
-    filteredFilenamesList(codebaseRootDir: string = null) : Array<string> {
-        this.allFilenames = this.walkFs(codebaseRootDir);
-        let filteredFilenames = new Object();
-
-        for (let i = 0; i < this.allFilenames.length; i++) {
-            let filename = this.allFilenames[i];
-            if (this.includeThisFile(filename)) {
-                filteredFilenames[filename] = 1;
-            }
-        }
-        return Object.keys(filteredFilenames).sort();
-    }
-
-    // ========== api methods above; private methods below ==========
-
-    includeThisDirectory(filename: string) : boolean {
-        for (let i = 0; i < this.excludeFilePatterns.length; i++) {
-            let pattern = this.excludeFilePatterns[i];
-            if (filename.includes(pattern)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
+    /**
+     * Return a boolean indicating if the given filename should be included
+     * in the scanning process, based on the filename patterns and filename
+     * suffixes in the configuration.
+     */
     includeThisFile(filename: string) : boolean {
+        let result = true;
         for (let i = 0; i < this.excludeFilePatterns.length; i++) {
             let pattern = this.excludeFilePatterns[i];
             if (filename.includes(pattern)) {
-                return false;
+                result = false;
             }
         }
         for (let i = 0; i < this.excludeFileSuffixes.length; i++) {
             let suffix = this.excludeFileSuffixes[i];
             if (filename.endsWith(suffix)) {
-                return false;
+                result = false;
             }
         }
-        return true;
-    }
-
-    getPackageName() : string {
-        let pkg = this.getPackageJson();
-        return pkg['name'];
-    }
-
-    getPackageVersion() : string {
-        let pkg = this.getPackageJson();
-        return pkg['version'];
-    }
-
-    getPackageAuthor() : string {
-        let pkg = this.getPackageJson();
-        return pkg['author'];
-    }
-
-    getPackageJson() {
-        return this.fu.readJsonObjectFile('package.json');
+        if (this.verbose) {
+            console.log("includeThisFile: " + filename + " --> " + result);
+        }
+        return result;
     }
 
     /**
@@ -250,6 +314,9 @@ export class EnvScanner {
         return p.includes('linux');
     }
 
+    /**
+     * Return true if given command line arg (i.e. --verbose) is present, else return false. 
+     */
     cliArgPresent(flag: string) : boolean {
         for (let i = 0; i < process.argv.length; i++) {
             if (process.argv[i] === flag) {
@@ -260,75 +327,92 @@ export class EnvScanner {
     }
 
     defaultEnvVarPatterns() {
-        return [
-            "_KEY",
-            "_URI",
-            "_URL",
-            "CONN_STR",
-            "CONNECTION_STR",
-            "CONNECTION_STRING"
-        ];
+        return this.defaultConfig()['env_var_patterns'];
     }
 
     defaultExcludeFilePatterns() {
-        return [
-            "__MACOSX/",
-            "__pycache__/",
-            ".code-workspace",
-            ".git/",
-            ".git/",
-            ".gradle/",
-            ".idea/",
-            ".vscode/",
-            "bin/",
-            "build/",
-            "htmlcov/",
-            "man/",
-            "node_modules/",
-            "obj/",
-            "opt/",
-            "tmp/",
-            "venv/"
-        ];
+        return this.defaultConfig()['exclude_file_patterns'];
     }
 
     defaultExcludeFileSuffixes() {
-        return [
-            ".acc",
-            ".avi",
-            ".bmp",
-            ".class",
-            ".dll",
-            ".doc",
-            ".docx",
-            ".DS_Store",
-            ".exe",
-            ".gif",
-            ".jar",
-            ".jpeg",
-            ".jpg",
-            ".mov",
-            ".mp3",
-            ".mp4",
-            ".pdf",
-            ".png",
-            ".ppt",
-            ".pptx",
-            ".pyc",
-            ".so",
-            ".tar",
-            ".tgz",
-            ".tiff",
-            ".wav",
-            ".xls",
-            ".xlsx",
-            ".vscode",
-            ".zip"
-        ];
+        return this.defaultConfig()['exclude_file_suffixes'];
     }
 
+    /**
+     * This method returns the default configuration object.
+     * It is used by default if you don't have a "evsecrets.json" file
+     * in the current directory.
+     * 
+     * This object is also written to your filesystem when the 'init'
+     * function is executed.
+     */
+    defaultConfig() {
+        return {
+            "description": "Configuration file for the evsecrets NPM library CLI program.",
+            "env_var_patterns": [
+                "_KEY",
+                "_URI",
+                "_URL",
+                "CONN_STR",
+                "CONNECTION_STR",
+                "CONNECTION_STRING"
+            ],
+            "exclude_file_patterns": [
+                "__MACOSX/",
+                "__pycache__/",
+                ".code-workspace",
+                ".git/",
+                ".git/",
+                ".gradle/",
+                ".idea/",
+                ".vscode/",
+                "bin/",
+                "build/",
+                "htmlcov/",
+                "man/",
+                "node_modules/",
+                "obj/",
+                "opt/",
+                "tmp/",
+                "venv/"
+            ],
+            "exclude_file_suffixes": [
+                ".acc",
+                ".avi",
+                ".bmp",
+                ".class",
+                ".dll",
+                ".doc",
+                ".docx",
+                ".DS_Store",
+                ".exe",
+                ".gif",
+                ".jar",
+                ".jpeg",
+                ".jpg",
+                ".mov",
+                ".mp3",
+                ".mp4",
+                ".pdf",
+                ".png",
+                ".ppt",
+                ".pptx",
+                ".pyc",
+                ".so",
+                ".tar",
+                ".tgz",
+                ".tiff",
+                ".wav",
+                ".xls",
+                ".xlsx",
+                ".vscode",
+                ".zip"
+            ]
+        };
+    }
 }
 
 // The following line is intentional, it contains the public value of the
 // Cosmos DB local emulator, in my system as env var AZURE_COSMOSDB_EMULATOR_KEY.
+// This secret value will be identified with a 'scan' function.
 // Secret value => C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==

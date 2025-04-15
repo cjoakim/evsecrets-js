@@ -19,8 +19,10 @@ describe('EnvScanner: constructor', () => {
 
     it('should have the correct envVarPatterns', () => {
         let es = new EnvScanner();
+        let init_result = es.init();  // regenerate the evsecrets.json file
+        expect(init_result).to.be.equal(true);
+
         let patterns = es.envVarPatterns.sort();
-        //console.log(patterns);
         expect(patterns.length).to.be.equal(6);
         let expectedPatterns = [
             "CONN_STR",
@@ -79,7 +81,6 @@ describe('EnvScanner: secretEnvVars()', () => {
     it('should return the correct secretEnvVars()', () => {
         let es = new EnvScanner();
         let secretVars = es.secretEnvVars();
-        //console.log(secretVars);
         expect(secretVars.length).to.be.above(6);
         expect(secretVars.length).to.be.below(30);
         let expectedVars = [
@@ -105,10 +106,8 @@ describe('EnvScanner: filteredFilenamesList()', () => {
     it('should return the correct filteredFilenamesList() list', function() {
         let es = new EnvScanner();
         let filteredFiles = es.filteredFilenamesList();
-        //console.log("filteredFiles.length: " + filteredFiles.length);
         for (let i = 0; i < filteredFiles.length; i++) {
             let filename = filteredFiles[i];
-            //console.log("filteredFiles: " + filename);
         }
         expect(filteredFiles.length).to.be.above(28);
         expect(filteredFiles.length).to.be.below(50);

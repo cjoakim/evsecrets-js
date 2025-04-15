@@ -19,11 +19,12 @@
         "build": "tsc",
         "prebuild": "rimraf dist",
         "test": "mocha dist/*.test.js",
-        "scan": "node ./dist/index.js scan",
+
+        "version": "node ./dist/index.js version",
+        "init": "node ./dist/index.js init",
         "secrets": "node ./dist/index.js secrets",
         "files": "node ./dist/index.js files",
-        "version": "node ./dist/index.js version",
-        "walk": "node ./dist/index.js walk"
+        "scan": "node ./dist/index.js scan"
     },
     "keywords": [
         "Detect",

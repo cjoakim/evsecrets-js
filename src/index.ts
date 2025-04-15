@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Entry point for evsecrets.
+ * Entry point for the evsecrets CLI program.
  * Chris Joakim, 2025
  */
 
@@ -10,10 +10,11 @@ import { FileUtil } from "./FileUtil";
 
 function displayCommandLineExamples() {
     console.log('-');
-    console.log('npx -- evsecrets@0.5.0 version');
-    console.log('npx -- evsecrets@0.5.0 secrets');
-    console.log('npx -- evsecrets@0.5.0 files');
-    console.log('npx -- evsecrets@0.5.0 scan');
+    console.log('npx -- evsecrets version');
+    console.log('npx -- evsecrets init');
+    console.log('npx -- evsecrets secrets');
+    console.log('npx -- evsecrets files');
+    console.log('npx -- evsecrets scan');
     console.log('');
 }
 
@@ -23,8 +24,11 @@ function main() {
     let es   = new EnvScanner();
     switch (func) {
         case "version":
-          console.log(EnvScanner.version());
-          break;
+            console.log(EnvScanner.version());
+            break;
+        case "init":
+            es.init();
+            break;
         case "secrets":
             es.secrets();
             break;
