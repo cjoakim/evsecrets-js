@@ -33,8 +33,7 @@ function main() {
             es.secrets();
             break;
         case "files":
-            let files = es.filteredFilenamesList();
-            console.log(files);
+            es.files();
             break;
         case "scan":
             let results = es.scan(null);

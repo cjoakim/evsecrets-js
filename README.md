@@ -56,6 +56,12 @@ $ npx -- evsecrets files
 $ npx -- evsecrets scan
 ```
 
+You can also specify a specific version number with npx.
+
+```
+$ npx -- evsecrets@0.9.0 scan
+```
+
 ---
 
 ### Project Installation 
@@ -232,16 +238,17 @@ during a **scan**.
 
 ## Version History
 
-| Version |    Date    | Changes                                                           |
-| ------- | ---------- | ----------------------------------------------------------------- |
-|  0.8.0  | 2025/04/15 | Initialization handling for absent config file                    |
-|  0.7.0  | 2025/04/15 | Updated GitHub URL, updated installation.  Added init subcommand  |
-|  0.6.0  | 2025/04/14 | Ported to the @nodelib/fs.walk library, made codebase synchronous |
-|  0.5.0  | 2025/04/13 | Added 'secrets' subcommand, removed 'patterns'                    |
-|  0.4.0  | 2025/04/13 | npx usage and -g installation                                     |
-|  0.3.0  | 2025/04/13 | Simplified bin command, added version CLI function                |
-|  0.2.0  | 2025/04/13 | Sample console_app                                                |
-|  0.1.0  | 2025/04/13 | Initial release                                                   |
+| Version |    Date    | Changes                                                             |
+| ------- | ---------- | ------------------------------------------------------------------- |
+|  0.9.0  | 2025/04/15 | Logging each file with the 'files' command instead of a json array  |
+|  0.8.0  | 2025/04/15 | Initialization handling for absent config file                      |
+|  0.7.0  | 2025/04/15 | Updated GitHub URL, updated installation.  Added init subcommand    |
+|  0.6.0  | 2025/04/14 | Ported to the @nodelib/fs.walk library, made codebase synchronous   |
+|  0.5.0  | 2025/04/13 | Added 'secrets' subcommand, removed 'patterns'                      |
+|  0.4.0  | 2025/04/13 | npx usage and -g installation                                       |
+|  0.3.0  | 2025/04/13 | Simplified bin command, added version CLI function                  |
+|  0.2.0  | 2025/04/13 | Sample console_app                                                  |
+|  0.1.0  | 2025/04/13 | Initial release                                                     |
 
 ## Common Errors
 

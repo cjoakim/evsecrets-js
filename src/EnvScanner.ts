@@ -14,7 +14,7 @@ import { FileUtil } from "./FileUtil";
 export class EnvScanner {
 
     static CONFIG_FILE: string = "evsecrets.json";
-    static VERSION: string = "0.8.0";
+    static VERSION: string = "0.9.0";
 
     fu : FileUtil = null;
     envVarPatterns : Array<string> = null;
@@ -194,6 +194,16 @@ export class EnvScanner {
             console.log(error);
         }
         return results;
+    }
+
+    /**
+     * Print the filteredFilenamesList on the console/terminal.
+     */
+    files() : void {
+        let filesList = this.filteredFilenamesList();
+        for (let i = 0; i < filesList.length; i++) {
+            console.log(filesList[i]);
+        }
     }
 
     /**
