@@ -39,6 +39,10 @@ These five subcommands are implemented:
 | files      | Display the filtered list of files that will be scanned per your evsecrets.json file    |
 | scan       | Scan the filtered files list in your codebase for the identified secrets                |
 
+The **scan** subcommand is the primary function. It will identify the files to be scanned,
+then scan them for your secrets.  The other subcommands (i.e. - version, secrets, files)
+are informational.
+
 ## Use 
 
 The **npx** program within Node.js can be used to execute this library,
@@ -57,6 +61,7 @@ $ npx -- evsecrets scan
 ### Project Installation 
 
 Alternatively, you can install the library locally in your Node.js project.
+See the **console_app** directory in this repo for a demonstration of this.
 
 ```
 $ npm install evsecrets

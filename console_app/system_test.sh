@@ -31,3 +31,9 @@ npm run secrets scan
 echo '=========='
 echo 'scan:'
 npm run secrets scan  -- --verbose --tmp-file-outputs
+
+
+# The following line is intentional, it contains the public value of the
+# Cosmos DB local emulator, in my system as env var AZURE_COSMOSDB_EMULATOR_KEY.
+# This secret value will be identified with a 'scan' function.
+# Secret value => C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
