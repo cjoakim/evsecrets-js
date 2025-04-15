@@ -170,7 +170,7 @@ and the following environment variable in your system:
 SOME_SECRET_KEY=C2y6yDjf5
 ```
 
-Then the value 'C2y6yDjf5' will be identified if it exists in your codebasesuring a **scan**.
+Then the value 'C2y6yDjf5' will be identified if it exists in your codebase during a **scan**.
 
 ---
 
@@ -199,86 +199,3 @@ In this case, on Linux and macOS, make the file executable with this command:
 ```
 $ chmod 744 ./node_modules/evsecrets/dist/index.js
 ```
-
---- 
-
-## Developer Notes
-
-Instructions for developing, testing, packaging, and publishing this library.
-
-### Links
-
-- https://docs.npmjs.com/cli/v11/commands/npx  (version 11.3.0 - latest)
-
-### Upgrade npm and typescript
-
-```
-$ npm install -g npm@11.3.0
-$ npm install -g typescript@5.8.3
-
-$ npm --version
-11.3.0
-
-$ tsc --version
-Version 5.8.3
-```
-
-### Clone the codebase
-
-```
-$ git clone git@github.com:cjoakim/evsecrets-js.git
-
-$ cd evsecrets-js
-```
-
-### Install libraries
-
-```
-$ ./install.sh
-```
-
-### Compile the TypeScript code, and test
-
-```
-$ ./build.sh
-
-...
-
-  EnvScanner: constructor
-    ✔ should return the correct version
-    ✔ should have the correct envVarPatterns
-    ✔ should have the correct excludeFilePatterns
-    ✔ should have the correct excludeFileSuffixes
-
-  EnvScanner: secretEnvVars()
-    ✔ should return the correct secretEnvVars()
-
-  EnvScanner: filteredFilenamesList()
-    ✔ should return the correct filteredFilenamesList() list
-
-  EnvScanner: scan()
-    ✔ should scan the codebase for secrets
-
-  7 passing (23ms)
-```
-
-### Execute the CLI functions
-
-```
-$ npm run files
-
-$ npm run scan
-```
-
-### Publish to npmjs.com
-
-```
-$ npm login
-$ npm publish
-```
-
----
-
-https://www.npmjs.com/package/@nodelib/fs.walk
-https://www.npmjs.com/package/walk 
-https://www.npmjs.com/package/node-os-walk   3y
