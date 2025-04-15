@@ -136,6 +136,9 @@ $ chmod 744 ./node_modules/evsecrets/dist/index.js
 In the root directory of your project, optionally create a file named
 **evsecrets.json** that looks like the following JSON.
 
+This file, with default values, can be created for you when you execute
+the 'init' subcommand as described above.
+
 Edit the values within **env_var_patterns**, **exclude_file_patterns** and
 **exclude_file_suffixes** per your needs.  The values shown below are
 the **defaults** implemented in the program.
@@ -217,7 +220,8 @@ and the following environment variable in your system:
 SOME_SECRET_KEY=C2y6yDjf5
 ```
 
-Then the value 'C2y6yDjf5' will be identified if it exists in your codebase during a **scan**.
+Then the value 'C2y6yDjf5' will be identified if it exists in your codebase
+during a **scan**.
 
 ---
 
