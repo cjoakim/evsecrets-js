@@ -1,42 +1,66 @@
 # evsecrets
 
-Home of the **evsecrets** npm library, a command-line interface (CLI) program.
-
-The purpose of this library is to detect **environment variable secrets**
-in your codebase **before** you push your code to GitHub.
+The purpose of the **evsecrets** npm library is to detect **secrets**
+in your codebase, **before** you push your code to GitHub, where the 
+secret values are defined in your **environment variables**.
+**evsecrets** is a command-line interface (CLI) program.
 
 Per the Twelve Factor App best practices, configuration should be stored in 
 environment variables; see https://12factor.net/config.
 Docker and containerized environments also commonly use environment variables.
 
-These CLI subcommands are implemented:
+---
 
-| Subcommand | Function                                                                                |
-| ---------- | --------------------------------------------------------------------------------------- |
-| version    | Display the version of the evsecrets library (i.e. - '0.5.0')                           |
-| secrets    | Display the pattern-matched environment variables and their values (i.e. - the secrets) |
-| files      | Display the filtered list of files that will be scanned per your evsecrets.json file    |
-| scan       | Scan the filtered files list in your codebase for the identified secrets                |
+## Global Installation
 
-## Installation
-
-### Global Installation
-
-You can install the library globally, with the -g parameter.
+evsecrets can be installed globally on your system as follows:
 
 ```
 $ npm install -g evsecrets
 ```
+
+Note: When installed globally, the envsecrets library can be used to scan
+the codebase of **any** project on your system (i.e. - Python, Java, C#, Node.js, etc.).
+Thus, this is the recommended installation approach.
+
+## Configuration
+
+See the **Configuration: evsecrets.json** section below.
+
+## CLI subcommands
+
+These four subcommands are implemented.
+
+| Subcommand | Function                                                                                |
+| ---------- | --------------------------------------------------------------------------------------- |
+| version    | Display the version of the evsecrets library (i.e. - '0.7.0')                           |
+| secrets    | Display the pattern-matched environment variables and their values (i.e. - the secrets) |
+| files      | Display the filtered list of files that will be scanned per your evsecrets.json file    |
+| scan       | Scan the filtered files list in your codebase for the identified secrets                |
+
+## Use 
+
+The **npx** program within Node.js can be used to execute this library,
+and the four subcommands, as follows:
+
+```
+$ npx -- evsecrets version
+$ npx -- evsecrets secrets
+$ npx -- evsecrets files
+$ npx -- evsecrets scan
+```
+
+---
 
 ### Project Installation 
 
 Alternatively, you can install the library locally in your Node.js project.
 
 ```
-$ npm install -g evsecrets
+$ npm install evsecrets
 ```
 
-Add script alias command in package.json:
+Add a script alias command in package.json:
 
 ```
     "scripts": {
@@ -60,14 +84,14 @@ Linux/macOS users may need to make the script executable:
 $ chmod 744 ./node_modules/evsecrets/dist/index.js
 ```
 
-## Configuration
+## Configuration: evsecrets.json
 
-In the root directory of your Node.js project, create a file named
-**evsecrets.json** that looks like the following.
+In the root directory of your project, optionally create a file named
+**evsecrets.json** that looks like the following JSON.
 
 Edit the values within **env_var_patterns**, **exclude_file_patterns** and
 **exclude_file_suffixes** per your needs.  The values shown below are
-the defaults implemented in the program.
+the **defaults** implemented in the program.
 
 These determine what environment variables to obtain your secrets from,
 the files to be excluded from scanning, and the filetypes to be excluded
@@ -143,34 +167,18 @@ Assuming the above **evsecrets.json** configuration file,
 and the following environment variable in your system:
 
 ```
-AZURE_COSMOSDB_EMULATOR_KEY=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+SOME_SECRET_KEY=C2y6yDjf5
 ```
 
-Then the value 'C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw=='
-will be identified if it exists in your codebase.
+Then the value 'C2y6yDjf5' will be identified if it exists in your codebasesuring a **scan**.
 
-## Use 
-
-The **npx** program within Node.js can be used to execute this library as follows:
-
-```
-$ npx -- evsecrets version
-$ npx -- evsecrets secrets
-$ npx -- evsecrets files
-$ npx -- evsecrets scan
-
-- or - 
-
-$ npx -- evsecrets@0.6.0 version
-$ npx -- evsecrets@0.6.0 secrets
-$ npx -- evsecrets@0.6.0 files
-$ npx -- evsecrets@0.6.0 scan
-```
+---
 
 ## Version History
 
 | Version |    Date    | Changes                                                           |
 | ------- | ---------- | ----------------------------------------------------------------- |
+|  0.7.0  | 2025/04/15 | Updated GitHub URL, updated installation                          |
 |  0.6.0  | 2025/04/14 | Ported to the @nodelib/fs.walk library, made codebase synchronous |
 |  0.5.0  | 2025/04/13 | Added 'secrets' subcommand, removed 'patterns'                    |
 |  0.4.0  | 2025/04/13 | npx usage and -g installation                                     |

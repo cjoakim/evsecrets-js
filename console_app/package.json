@@ -33,7 +33,7 @@
         "dotenv": "^16.5.0",
         "ts-node": "^10.9.2",
         "winston": "^3.17.0",
-        "evsecrets": "file:../evsecrets-0.6.0.tgz"
+        "evsecrets": "file:../evsecrets-0.7.0.tgz"
     },
     "devDependencies": {
         "@types/chai": "^5.2.1",
