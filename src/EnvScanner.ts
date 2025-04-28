@@ -13,8 +13,8 @@ import { FileUtil } from "./FileUtil";
 
 export class EnvScanner {
 
-    static CONFIG_FILE: string = "evsecrets.json";
-    static VERSION: string = "0.9.0";
+    static CONFIG_FILE: string = ".evsecrets.json";
+    static VERSION: string = "1.0.0";
 
     fu : FileUtil = null;
     envVarPatterns : Array<string> = null;
@@ -34,7 +34,7 @@ export class EnvScanner {
             this.excludeFilePatterns = this.defaultExcludeFilePatterns();
             this.excludeFileSuffixes = this.defaultExcludeFileSuffixes();
 
-            // next try to read the 'evsecrets.json' configuration file
+            // next try to read the '.evsecrets.json' configuration file
             if (this.fu.fileExists(EnvScanner.CONFIG_FILE)) {
                 try {
                     let txt = this.fu.readTextFileSync(EnvScanner.CONFIG_FILE);
@@ -72,7 +72,7 @@ export class EnvScanner {
     }
 
     /**
-     * Write a default 'evsecrets.json' file in the current directory.
+     * Write a default '.evsecrets.json' file in the current directory.
      */
     init() : boolean {
         try {
@@ -133,7 +133,7 @@ export class EnvScanner {
     secrets() : void {
         let secretEnvVarNames = this.secretEnvVars();
         let msg = util.format(
-            '%s environment variables with secrets per your evsecrets.json configuration:',
+            '%s environment variables with secrets per your .evsecrets.json configuration:',
             secretEnvVarNames.length);
         console.log(msg);
         for (let e = 0; e < secretEnvVarNames.length; e++) {
@@ -145,7 +145,7 @@ export class EnvScanner {
 
     /**
      * Scan your codebase for the secrets defined in your environment variables,
-     * per the configuration in evsecrets.json or the default configuration.
+     * per the configuration in .evsecrets.json or the default configuration.
      * Display the matches and line numbers in the terminal output.
      */
     scan(codebaseRootDir: string = null, silent: boolean = false) : Array<string> {
@@ -361,7 +361,7 @@ export class EnvScanner {
 
     /**
      * This method returns the default configuration object.
-     * It is used by default if you don't have a "evsecrets.json" file
+     * It is used by default if you don't have a ".evsecrets.json" file
      * in the current directory.
      * 
      * This object is also written to your filesystem when the 'init'

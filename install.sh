@@ -6,6 +6,8 @@
 
 rm -rf node_modules
 
+rm package-lock.json
+
 mkdir -p ./tmp
 
 npm install

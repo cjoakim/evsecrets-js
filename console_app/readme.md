@@ -35,9 +35,9 @@ $ install.sh
 ### Test
 
 ```
-$ npm run evsecrets version
-$ npm run evsecrets init
-$ npm run evsecrets secrets
-$ npm run evsecrets files
-$ npm run evsecrets scan
+$ npm run secrets version
+$ npm run secrets init
+$ npm run secrets secrets
+$ npm run secrets files
+$ npm run secrets scan
 ```

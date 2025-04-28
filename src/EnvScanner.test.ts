@@ -19,7 +19,7 @@ describe('EnvScanner: constructor', () => {
 
     it('should have the correct envVarPatterns', () => {
         let es = new EnvScanner();
-        let init_result = es.init();  // regenerate the evsecrets.json file
+        let init_result = es.init();  // regenerate the .evsecrets.json file
         expect(init_result).to.be.equal(true);
 
         let patterns = es.envVarPatterns.sort();

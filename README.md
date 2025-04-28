@@ -13,19 +13,19 @@ Docker and containerized environments also commonly use environment variables.
 
 ## Global Installation
 
-evsecrets can be installed globally on your system as follows:
+evsecrets can be installed globally on your system, using -g, as follows:
 
 ```
 $ npm install -g evsecrets
 ```
 
 Note: When installed globally, the envsecrets library can be used to scan
-the codebase of **any** project on your system (i.e. - Python, Java, C#, Node.js, etc.).
+the codebase of **any** project on your system (i.e. - **Python, Java, C#, Node.js, etc.**).
 Thus, this is the recommended installation approach.
 
 ## Configuration
 
-See the **Configuration: evsecrets.json** section below.
+See the **Configuration: .evsecrets.json** section below.
 
 ## CLI subcommands
 
@@ -33,10 +33,10 @@ These five subcommands are implemented:
 
 | Subcommand | Function                                                                                |
 | ---------- | --------------------------------------------------------------------------------------- |
-| version    | Display the version of the evsecrets library (i.e. - '0.7.0')                           |
-| init       | Create a evsecrets.json file in the current directory.  Edit it as necessary            |
+| version    | Display the version of the evsecrets library (i.e. - '1.0.0')                           |
+| init       | Create a .evsecrets.json file in the current directory.  Edit it as necessary           |
 | secrets    | Display the pattern-matched environment variables and their values (i.e. - the secrets) |
-| files      | Display the filtered list of files that will be scanned per your evsecrets.json file    |
+| files      | Display the filtered list of files that will be scanned per your .evsecrets.json file   |
 | scan       | Scan the filtered files list in your codebase for the identified secrets                |
 
 The **scan** subcommand is the primary function. It will identify the files to be scanned,
@@ -59,7 +59,7 @@ $ npx -- evsecrets scan
 You can also specify a specific version number with npx.
 
 ```
-$ npx -- evsecrets@0.9.0 scan
+$ npx -- evsecrets@1.0.0 scan
 ```
 
 ---
@@ -95,7 +95,8 @@ $ npm run secrets scan
 ### Optional CLI flag arguments 
 
 The **--verbose** command-line arg can be used to produce additional output
-for your understanding and debugging purposes.
+for your understanding of exactly which files are included and excluded
+in the scanning process.
 
 The **--tmp-file-outputs** command-line arg can be used to write json
 files to the **tmp** directory within the current directory.
@@ -106,31 +107,30 @@ For example:
 
 ```
 $ npm run scan -- --tmp-file-outputs
-...
+
+> evsecrets@1.0.0 scan
+> node ./dist/index.js scan --tmp-file-outputs
+
 file written: tmp/evsecrets-walkFs.json
 file written: tmp/evsecrets-filteredFilenamesList.json
+
+--- 1
+WARNING: Secret found at line 44 of file /Users/cjoakim/github/evsecrets-js/console_app/system_test.sh
+content: # Secret value => C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+--- 2
+WARNING: Secret found at line 441 of file /Users/cjoakim/github/evsecrets-js/dist/EnvScanner.js
+content: // Secret value => C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+--- 3
+WARNING: Secret found at line 439 of file /Users/cjoakim/github/evsecrets-js/src/EnvScanner.ts
+content: // Secret value => C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
 ```
+
+**Note in the above output that a secret value was found in three files.**
 
 ```
 $ npm run scan -- --verbose
-...
-includeThisFile: /Users/cjoakim/github/evsecrets-js/.gitignore --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/LICENSE --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/README.md --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/backup.xml --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/build.ps1 --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/build.sh --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/devnotes.md --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/evsecrets-0.7.0.tgz --> false
-includeThisFile: /Users/cjoakim/github/evsecrets-js/evsecrets.json --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/install.ps1 --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/install.sh --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/pack.ps1 --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/pack.sh --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/package-lock.json --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/package.json --> true
-includeThisFile: /Users/cjoakim/github/evsecrets-js/tsconfig.json --> true
-...
+
+
 includeThisFile: /Users/cjoakim/github/evsecrets-js/tmp/evsecrets-filteredFilenamesList.json --> false
 includeThisFile: /Users/cjoakim/github/evsecrets-js/tmp/evsecrets-walkFs.json --> false
 ...
@@ -142,10 +142,10 @@ Linux/macOS users may need to make the script executable:
 $ chmod 744 ./node_modules/evsecrets/dist/index.js
 ```
 
-## Configuration: evsecrets.json
+## Configuration: .evsecrets.json
 
 In the root directory of your project, optionally create a file named
-**evsecrets.json** that looks like the following JSON.
+**.evsecrets.json** that looks like the following JSON.
 
 This file, with default values, can be created for you when you execute
 the 'init' subcommand as described above.
@@ -224,7 +224,7 @@ from scanning, respectively.
 
 ## Example
 
-Assuming the above **evsecrets.json** configuration file, 
+Assuming the above **.evsecrets.json** configuration file, 
 and the following environment variable in your system:
 
 ```
@@ -240,6 +240,7 @@ during a **scan**.
 
 | Version |    Date    | Changes                                                             |
 | ------- | ---------- | ------------------------------------------------------------------- |
+|  1.0.0  | 2025/04/28 | Dotfile '.evsecrets.json' replaces 'evsecrets.json'                 |
 |  0.9.0  | 2025/04/15 | Logging each file with the 'files' command instead of a json array  |
 |  0.8.0  | 2025/04/15 | Initialization handling for absent config file                      |
 |  0.7.0  | 2025/04/15 | Updated GitHub URL, updated installation.  Added init subcommand    |
