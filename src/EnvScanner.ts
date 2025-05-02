@@ -8,6 +8,7 @@ import util from "util";
 
 import * as fsWalk from '@nodelib/fs.walk';
 
+import { DotEnvReader } from "./DotEnvReader";
 import { FileUtil } from "./FileUtil";
 
 
@@ -124,6 +125,20 @@ export class EnvScanner {
                 }
             }
         }
+
+        // .env file logic
+        let dotEnvReader = new DotEnvReader();
+        let dotEnvVarNames = Object.keys(dotEnvReader.envVars).sort();
+        for (let e = 0; e < dotEnvVarNames.length; e++) {
+            let name = dotEnvVarNames[e];
+            for (let i = 0; i < this.envVarPatterns.length; i++) {
+                let pattern = this.envVarPatterns[i];
+                if (name.includes(pattern)) {
+                    names[name] = pattern;
+                }
+            }
+        }
+
         return Object.keys(names).sort();
     }
 
@@ -132,14 +147,21 @@ export class EnvScanner {
      */
     secrets() : void {
         let secretEnvVarNames = this.secretEnvVars();
+        let dotEnvReader = new DotEnvReader();
+
         let msg = util.format(
             '%s environment variables with secrets per your .evsecrets.json configuration:',
             secretEnvVarNames.length);
         console.log(msg);
+
         for (let e = 0; e < secretEnvVarNames.length; e++) {
             let envvar = secretEnvVarNames[e];
             let value = process.env[envvar];
-            console.log(envvar + ' --> ' + value);
+            console.log(envvar + ' --> ' + value +  '   (environment)');
+            if (dotEnvReader.envVars.hasOwnProperty(envvar)) {
+                let value = dotEnvReader.envVars[envvar];
+                console.log(envvar + ' --> ' + value +  '   (.env)');
+            }
         }
     }
 

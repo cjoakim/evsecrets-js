@@ -19,6 +19,7 @@ export class DotEnvReader {
 
     exists : boolean = false;
     envVars : Object = {}
+    names : Array<string> = [];
 
     constructor() {
         try {
@@ -27,6 +28,7 @@ export class DotEnvReader {
                 this.exists = true;
                 this.parseFile(fu, DotEnvReader.FILENAME);
             }
+            this.names = Object.keys(this.envVars).sort();
         }
         catch (err) {
             console.log(err);
