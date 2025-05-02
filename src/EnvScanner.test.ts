@@ -15,6 +15,7 @@ describe('EnvScanner: constructor', () => {
         let pkgVersion : string = obj['version'];
         let codeVersion : string = EnvScanner.version();
         expect(pkgVersion).to.be.equal(codeVersion);
+        expect(pkgVersion).to.be.equal('1.1.0');
     });
 
     it('should have the correct envVarPatterns', () => {

@@ -5,6 +5,10 @@ in your codebase, **before** you push your code to GitHub, where the
 secret values are defined in your **environment variables**.
 **evsecrets** is a command-line interface (CLI) program.
 
+Version 1.1.0 ov this library added support for optional **.env** files,
+such as used by the Python **python-dotenv** library and the Node.js
+**dotenv** library.
+
 Per the Twelve Factor App best practices, configuration should be stored in 
 environment variables; see https://12factor.net/config.
 Docker and containerized environments also commonly use environment variables.
@@ -234,12 +238,31 @@ SOME_SECRET_KEY=C2y6yDjf5
 Then the value 'C2y6yDjf5' will be identified if it exists in your codebase
 during a **scan**.
 
+### .env files
+
+The GitHub repo for the evsecrets library contains the following example .env file.
+
+Your secrets can thus be defined in either the actual environment variables
+and/or your .env file.  If your environment and .env file contain different
+values for a given environment variable name, then BOTH values will be scanned.
+
+As shown in this example, several formats of quoted and unquoted values are supported.
+
+```
+AZURE_COSMOSDB_EMULATOR_URI=https://localhost:8081/
+KAGGLE_KEY=dd64Wup8RwYrNCReZQPB
+KAGGLE_USERNAME=   Miles   
+SOME_DOUBLE_QUOTED_API_KEY="Tdvs4352oeSe6o6ULU7Umb3pZQ6u3RqDQ"
+SOME_SINGLE_QUOTED_API_KEY= "Tdvs4352oeSe6o6ULU7Umb3pZQ6u3RqSQ" 
+```
+
 ---
 
 ## Version History
 
 | Version |    Date    | Changes                                                             |
 | ------- | ---------- | ------------------------------------------------------------------- |
+|  1.1.0  | 2025/05/02 | Added support for optional .env files                               |
 |  1.0.0  | 2025/04/28 | Dotfile '.evsecrets.json' replaces 'evsecrets.json'                 |
 |  0.9.0  | 2025/04/15 | Logging each file with the 'files' command instead of a json array  |
 |  0.8.0  | 2025/04/15 | Initialization handling for absent config file                      |

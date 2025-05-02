@@ -11,8 +11,8 @@ describe('DotEnvReader: constructor', () => {
 
     it('should find and parse the .env file', () => {
         let reader = new DotEnvReader();
-        let envVars = reader.envVars;
         expect(reader.exists).to.be.equal(true);
+        expect(reader.envVars["AZURE_COSMOSDB_EMULATOR_URI"]).to.be.equal("https://localhost:8081/");
         expect(reader.envVars["KAGGLE_KEY"]).to.be.equal("dd64Wup8RwYrNCReZQPB");
         expect(reader.envVars["KAGGLE_USERNAME"]).to.be.equal("Miles");
         expect(reader.envVars["SOME_DOUBLE_QUOTED_API_KEY"]).to.be.equal("Tdvs4352oeSe6o6ULU7Umb3pZQ6u3RqDQ");
@@ -25,7 +25,6 @@ describe('DotEnvReader: constructor', () => {
             'SOME_DOUBLE_QUOTED_API_KEY',
             'SOME_SINGLE_QUOTED_API_KEY'
         ];
-        console.log(reader.names);
         expect(reader.names.length).to.be.equal(5);
 
         expect(reader.names[0]).to.be.equal(expectedNames[0]);
@@ -36,6 +35,7 @@ describe('DotEnvReader: constructor', () => {
 
         // This test assumes that the .env file has the following contents:
         //
+        // AZURE_COSMOSDB_EMULATOR_URI=https://localhost:8081/
         // KAGGLE_KEY=dd64Wup8RwYrNCReZQPB
         // KAGGLE_USERNAME=   Miles   
         // SOME_DOUBLE_QUOTED_API_KEY="Tdvs4352oeSe6o6ULU7Umb3pZQ6u3RqDQ"

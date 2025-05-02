@@ -15,7 +15,7 @@ import { FileUtil } from "./FileUtil";
 export class EnvScanner {
 
     static CONFIG_FILE: string = ".evsecrets.json";
-    static VERSION: string = "1.0.0";
+    static VERSION: string = "1.1.0";
 
     fu : FileUtil = null;
     envVarPatterns : Array<string> = null;
@@ -110,8 +110,8 @@ export class EnvScanner {
       }
 
     /**
-     * Return an array of the secret environment variable names
-     * per your defined patterns.
+     * Return an array of the secret environment variable names per your defined patterns.
+     * This includes the environment variable names in the .env file, if present.
      */
     secretEnvVars() : Array<string> {
         let names = new Object();
@@ -157,6 +157,8 @@ export class EnvScanner {
         for (let e = 0; e < secretEnvVarNames.length; e++) {
             let envvar = secretEnvVarNames[e];
             let value = process.env[envvar];
+            // It's possible that an environment variable can be defined
+            // in one or two locations - the actual ENV, and the .env file.
             console.log(envvar + ' --> ' + value +  '   (environment)');
             if (dotEnvReader.envVars.hasOwnProperty(envvar)) {
                 let value = dotEnvReader.envVars[envvar];
@@ -175,11 +177,35 @@ export class EnvScanner {
         try {
             let secrets = new Array<string>();
             let envVars = this.secretEnvVars();
+            let dotEnvReader = new DotEnvReader();
             let counter = 0;
+
+            // first, collect the secrets from either ENV and/or .env
             for (let i = 0; i < envVars.length; i++) {
                 let envvar = envVars[i];
-                secrets.push(process.env[envvar]);
+
+                if (envvar in process.env) {
+                    let secret = process.env[envvar]; // as string;
+                    if (!secrets.includes(secret)) {
+                        secrets.push(secret);
+                        if (this.verbose) {
+                            console.log("adding secret " + secret + " from ENV " + envvar);
+                        }
+                    }
+                }
+
+                if (dotEnvReader.envVars.hasOwnProperty(envvar)) {
+                    let secret = dotEnvReader.envVars[envvar];
+                    if (!secrets.includes(secret)) {
+                        secrets.push(secret);
+                        if (this.verbose) {
+                            console.log("adding secret " + secret + " from .env " + envvar);
+                        }
+                    }
+                }
             }
+
+            // next, scan the files for the identified secrets
             let codebaseFilenames = this.filteredFilenamesList(codebaseRootDir);
             for (let i = 0; i < codebaseFilenames.length; i++) {
                 let filename = codebaseFilenames[i];
