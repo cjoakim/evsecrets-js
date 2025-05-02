@@ -109,8 +109,8 @@ describe('EnvScanner: filteredFilenamesList()', () => {
         for (let i = 0; i < filteredFiles.length; i++) {
             let filename = filteredFiles[i];
         }
-        expect(filteredFiles.length).to.be.above(28);
-        expect(filteredFiles.length).to.be.below(50);
+        expect(filteredFiles.length).to.be.above(50);
+        expect(filteredFiles.length).to.be.below(60);
 
         let expectedFiles = [
             'evsecrets-js/src/index.ts',

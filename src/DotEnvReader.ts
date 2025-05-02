@@ -24,6 +24,7 @@ export class DotEnvReader {
         try {
             let fu : FileUtil = new FileUtil();
             if (fu.fileExists(DotEnvReader.FILENAME)) {
+                this.exists = true;
                 this.parseFile(fu, DotEnvReader.FILENAME);
             }
         }
@@ -49,13 +50,23 @@ export class DotEnvReader {
                         let eqIdx = trimmed.indexOf("=");
                         if (eqIdx > 0) {
                             let namePart = trimmed.substring(0, eqIdx).trim();
-                            let valuePart = trimmed.substring(eqIdx).trim();
+                            let valuePart = trimmed.substring(eqIdx + 1).trim();
+
+                            // handle double-quoted values
                             if (valuePart.startsWith("\"")) {
                                 valuePart = valuePart.substring(1);
-                                if (valuePart.endsWith("\n")) {
-                                    valuePart = valuePart.substring(0, valuePart.length)
+                                if (valuePart.endsWith("\"")) {
+                                    valuePart = valuePart.substring(0, valuePart.length - 1)
                                 }
-                            } 
+                            }
+                            // handle single-quoted values
+                            if (valuePart.startsWith("'")) {
+                                valuePart = valuePart.substring(1);
+                                if (valuePart.endsWith("'")) {
+                                    valuePart = valuePart.substring(0, valuePart.length - 1)
+                                }
+                            }
+                            this.envVars[namePart] = valuePart;
                         }
                     }
                 }
