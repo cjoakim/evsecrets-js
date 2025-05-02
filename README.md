@@ -5,7 +5,7 @@ in your codebase, **before** you push your code to GitHub, where the
 secret values are defined in your **environment variables**.
 **evsecrets** is a command-line interface (CLI) program.
 
-Version 1.1.0 ov this library added support for optional **.env** files,
+Version 1.1.0 of this library added support for optional **.env** files,
 such as used by the Python **python-dotenv** library and the Node.js
 **dotenv** library.
 
@@ -63,7 +63,7 @@ $ npx -- evsecrets scan
 You can also specify a specific version number with npx.
 
 ```
-$ npx -- evsecrets@1.0.0 scan
+$ npx -- evsecrets@1.1.0 scan
 ```
 
 ---
@@ -112,24 +112,34 @@ For example:
 ```
 $ npm run scan -- --tmp-file-outputs
 
-> evsecrets@1.0.0 scan
+> evsecrets@1.1.0 scan
 > node ./dist/index.js scan --tmp-file-outputs
 
 file written: tmp/evsecrets-walkFs.json
 file written: tmp/evsecrets-filteredFilenamesList.json
 
 --- 1
-WARNING: Secret found at line 44 of file /Users/cjoakim/github/evsecrets-js/console_app/system_test.sh
-content: # Secret value => C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+WARNING: Secret found at line 3 of file /Users/cjoakim/github/evsecrets-js/.env
+content: AZURE_COSMOSDB_EMULATOR_URI=https://localhost:8081/
 --- 2
-WARNING: Secret found at line 441 of file /Users/cjoakim/github/evsecrets-js/dist/EnvScanner.js
-content: // Secret value => C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+WARNING: Secret found at line 4 of file /Users/cjoakim/github/evsecrets-js/.env
+content: KAGGLE_KEY=dd64Wup8RwYrNCReZQPB
 --- 3
-WARNING: Secret found at line 439 of file /Users/cjoakim/github/evsecrets-js/src/EnvScanner.ts
-content: // Secret value => C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+WARNING: Secret found at line 6 of file /Users/cjoakim/github/evsecrets-js/.env
+content: SOME_DOUBLE_QUOTED_API_KEY="Tdvs4352oeSe6o6ULU7Umb3pZQ6u3RqDQ"
+--- 4
+WARNING: Secret found at line 7 of file /Users/cjoakim/github/evsecrets-js/.env
+content: SOME_SINGLE_QUOTED_API_KEY= "Tdvs4352oeSe6o6ULU7Umb3pZQ6u3RqSQ"
+--- 5
+WARNING: Secret found at line 123 of file /Users/cjoakim/github/evsecrets-js/README.md
+content: content: # Secret value => C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+
+...
 ```
 
-**Note in the above output that a secret value was found in three files.**
+Verbose scanning, with the **--verbose** flag, gives you additional output,
+such as explicitly listing each file along with a boolean indicating if it
+was included in the scanning process.
 
 ```
 $ npm run scan -- --verbose
@@ -138,12 +148,6 @@ $ npm run scan -- --verbose
 includeThisFile: /Users/cjoakim/github/evsecrets-js/tmp/evsecrets-filteredFilenamesList.json --> false
 includeThisFile: /Users/cjoakim/github/evsecrets-js/tmp/evsecrets-walkFs.json --> false
 ...
-```
-
-Linux/macOS users may need to make the script executable:
-
-```
-$ chmod 744 ./node_modules/evsecrets/dist/index.js
 ```
 
 ## Configuration: .evsecrets.json
@@ -240,7 +244,13 @@ during a **scan**.
 
 ### .env files
 
-The GitHub repo for the evsecrets library contains the following example .env file.
+The evsecrets library will read, parse, and use the values in your optional
+**.env** file.  Some programming language ecosystems support this alternative
+way to define environment variables, such as the Python **python-dotenv** library
+and the Node.js **dotenv** library.
+
+The GitHub repo for the evsecrets library contains the an example .env file,
+named **example_dot_env**, which is shown below.
 
 Your secrets can thus be defined in either the actual environment variables
 and/or your .env file.  If your environment and .env file contain different
